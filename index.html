@@ -12,6 +12,9 @@
             --soft-gray: #f0f0f0;
             --border-gray: #d1d1d1;
             --white: #ffffff;
+            --status-procesado: #6c757d;
+            --status-enviado: #f9a825;
+            --status-entregado: #2e7d32;
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
@@ -31,7 +34,7 @@
 
         .container { 
             width: 100%; 
-            max-width: 800px;
+            max-width: 900px;
             display: flex;
             flex-direction: column;
             gap: 25px;
@@ -47,7 +50,6 @@
         header h1 { font-size: 3rem; margin: 0; letter-spacing: -2px; text-transform: uppercase; }
         header p { font-weight: 700; font-size: 0.75rem; letter-spacing: 3px; color: var(--medium-gray); }
 
-        /* Dashboard de Métricas */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -62,60 +64,68 @@
             transition: var(--transition);
         }
 
-        .stat-box:hover { background: var(--medium-gray); transform: translateY(-2px); }
         .stat-box small { font-size: 0.6rem; text-transform: uppercase; display: block; margin-bottom: 5px; opacity: 0.7; }
         .stat-box div { font-size: 1.3rem; font-weight: 800; }
 
-        /* Tarjetas Estilizadas */
         .card {
             background: var(--white);
             padding: 25px;
             border: 1px solid var(--dark-gray);
             box-shadow: 6px 6px 0px var(--dark-gray);
-            transition: var(--transition);
         }
-
-        .card:hover { box-shadow: 10px 10px 0px var(--medium-gray); }
 
         h2 { 
             text-transform: uppercase; font-size: 0.85rem; border-left: 4px solid var(--medium-gray); 
             padding-left: 12px; margin-top: 0; margin-bottom: 25px; letter-spacing: 1px;
         }
 
-        /* Formulario Vertical */
         .form-vertical { display: flex; flex-direction: column; gap: 15px; }
         .field { display: flex; flex-direction: column; }
         label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; color: var(--medium-gray); }
         
         input, select { 
             padding: 14px; border: 1px solid var(--border-gray); font-weight: 600; 
-            font-size: 0.95rem; width: 100%; background: #fdfdfd; transition: var(--transition);
+            font-size: 0.95rem; width: 100%; background: #fdfdfd;
         }
-
-        input:focus { outline: none; border-color: var(--dark-gray); background: white; }
 
         button.btn-main { 
             background: var(--dark-gray); color: var(--white); border: none; padding: 18px; 
             font-weight: 900; text-transform: uppercase; cursor: pointer; letter-spacing: 1px;
+        }
+
+        /* TABLA AJUSTADA */
+        .table-scroll { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; min-width: 600px; }
+        thead th { background: var(--dark-gray); color: var(--white); padding: 10px; text-align: left; }
+        td { padding: 8px 10px; border-bottom: 1px solid var(--soft-gray); vertical-align: middle; }
+
+        /* BOTONES DE ESTATUS LOGÍSTICO */
+        .btn-status {
+            border: none;
+            padding: 6px 10px;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            width: 90px;
             transition: var(--transition);
         }
 
-        button.btn-main:active { transform: scale(0.98); }
+        .status-procesado { background-color: var(--status-procesado); }
+        .status-enviado { background-color: var(--status-enviado); }
+        .status-entregado { background-color: var(--status-entregado); }
 
-        /* Gráficos */
-        .chart-wrapper { height: 260px; margin-bottom: 10px; }
+        .btn-ver {
+            background: none;
+            border: 1px solid var(--dark-gray);
+            font-size: 0.6rem;
+            padding: 5px 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-        /* Tabla de Historial */
-        .table-scroll { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 500px; }
-        thead th { background: var(--dark-gray); color: var(--white); padding: 15px; text-align: left; }
-        td { padding: 12px; border-bottom: 1px solid var(--soft-gray); }
-
-        .badge { padding: 4px 8px; font-weight: 800; font-size: 0.65rem; border: 1px solid var(--dark-gray); }
-        .badge-completada { background: #e8f5e9; color: #2e7d32; }
-        .badge-pendiente { background: #fffde7; color: #f9a825; }
-
-        /* Factura Final */
         .modal { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(255,255,255,0.95); z-index: 2000; justify-content: center; align-items: center;
@@ -125,26 +135,9 @@
         .invoice-box { 
             width: 90%; max-width: 420px; padding: 40px; border: 1px solid var(--dark-gray); 
             background: var(--white); box-shadow: 15px 15px 0px rgba(0,0,0,0.1);
-            animation: slideUp 0.4s ease;
         }
 
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .inv-detail { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.8rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 4px; }
-        .inv-label { font-weight: 800; text-transform: uppercase; color: var(--medium-gray); }
-
-        footer.signature {
-            margin-top: 20px; padding: 40px 0; text-align: center; border-top: 1px solid var(--border-gray);
-        }
-        footer.signature p { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 800; color: var(--medium-gray); }
-
-        @media print {
-            .container, .modal { display: none !important; }
-            #invoice-printable { display: block !important; position: absolute; top: 0; left: 0; width: 100%; border: none; box-shadow: none; }
-            .no-print { display: none !important; }
-        }
-
-        @media (max-width: 500px) { .stats-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .stats-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -172,7 +165,7 @@
             <div class="field"><label>Nombre del Producto</label><input type="text" name="producto" required></div>
             <div class="field"><label>Monto Total ($)</label><input type="number" step="0.01" name="monto" required></div>
             <div class="field">
-                <label>Estatus de Venta</label>
+                <label>Estatus de Pago</label>
                 <select name="estadoVenta">
                     <option value="Completada">Completada</option>
                     <option value="Pendiente">Pendiente</option>
@@ -183,20 +176,16 @@
     </div>
 
     <div class="card">
-        <h2>Análisis Geográfico</h2>
-        <div class="chart-wrapper"><canvas id="chartRegiones"></canvas></div>
-    </div>
-
-    <div class="card">
-        <h2>Historial General</h2>
+        <h2>Historial General de Pedidos</h2>
         <div class="table-scroll">
             <table>
                 <thead>
                     <tr>
                         <th>Fecha</th>
                         <th>Cliente</th>
-                        <th>Estado</th>
+                        <th>Pago</th>
                         <th>Monto</th>
+                        <th>Logística (Clic para cambiar)</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
@@ -214,20 +203,7 @@
     <div class="invoice-box" id="invoice-printable">
         <h2 style="border:none; padding:0; font-size: 2.2rem; margin-bottom: 5px;">THE SPOT</h2>
         <p style="font-size: 0.6rem; letter-spacing: 2px; margin-bottom: 20px; color: var(--medium-gray);">COMPROBANTE OFICIAL</p>
-        
-        <div class="inv-detail"><span class="inv-label">Fecha:</span><span id="f-fecha"></span></div>
-        <div class="inv-detail"><span class="inv-label">Nombre:</span><span id="f-nombre"></span></div>
-        <div class="inv-detail"><span class="inv-label">Cédula:</span><span id="f-cedula"></span></div>
-        <div class="inv-detail"><span class="inv-label">Teléfono:</span><span id="f-telefono"></span></div>
-        <div class="inv-detail"><span class="inv-label">Ubicación:</span><span id="f-estado"></span></div>
-        <div class="inv-detail"><span class="inv-label">Agencia:</span><span id="f-agencia"></span></div>
-        <div class="inv-detail"><span class="inv-label">Producto:</span><span id="f-producto"></span></div>
-        <div class="inv-detail"><span class="inv-label">Estatus:</span><span id="f-estatus"></span></div>
-
-        <div style="font-size: 2.5rem; font-weight: 900; text-align: right; border-top: 2px solid var(--dark-gray); padding-top: 15px; margin-top: 20px;">
-            $<span id="f-monto"></span>
-        </div>
-
+        <div id="invoice-content"></div>
         <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 30px;" class="no-print">
             <button onclick="window.print()" style="padding:12px; background:var(--dark-gray); color:white; font-weight:bold; cursor:pointer;">IMPRIMIR PDF</button>
             <button onclick="cerrarFactura()" style="padding:10px; background:var(--soft-gray); border:none; cursor:pointer;">CERRAR</button>
@@ -238,7 +214,9 @@
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwQWjggPSP6ZOkkFTvljn3QmWwKj4wbQ-iigliSxIyDFUoh3L9QPDHx56FNxHNbVFn9/exec';
     const estadosVzla = ["Amazonas","Anzoátegui","Apure","Aragua","Barinas","Bolívar","Carabobo","Cojedes","Delta Amacuro","Distrito Capital","Falcón","Guárico","Lara","Mérida","Miranda","Monagas","Nueva Esparta","Portuguesa","Sucre","Táchira","Trujillo","Vargas","Yaracuy","Zulia"];
-    let chart1;
+    
+    // Objeto para persistir estados logísticos localmente en esta sesión
+    const logisticStatusMap = {};
 
     const selectE = document.getElementById('selectEstado');
     estadosVzla.forEach(e => selectE.innerHTML += `<option value="${e}">${e}</option>`);
@@ -248,54 +226,60 @@
             const res = await fetch(scriptURL);
             const data = await res.json();
             
-            // Dashboard
             const total = data.reduce((sum, v) => sum + parseFloat(v.monto || 0), 0);
             document.getElementById('dash-total').innerText = `$${total.toLocaleString()}`;
             document.getElementById('dash-count').innerText = data.length;
             document.getElementById('dash-avg').innerText = `$${(total / (data.length || 1)).toFixed(2)}`;
 
-            // Tabla
             const tbody = document.getElementById('cuerpoTabla');
             tbody.innerHTML = '';
-            data.sort((a,b) => new Date(b.fecha) - new Date(a.fecha)).forEach(v => {
-                const est = v.estadoVenta || 'Completada';
+            data.sort((a,b) => new Date(b.fecha) - new Date(a.fecha)).forEach((v, index) => {
+                const idUnico = v.id || index; // Usar ID o índice
+                if(!logisticStatusMap[idUnico]) logisticStatusMap[idUnico] = 'procesado';
+
+                const estPago = v.estadoVenta || 'Completada';
+                const currentLogistics = logisticStatusMap[idUnico];
+
                 tbody.innerHTML += `<tr>
                     <td>${new Date(v.fecha).toLocaleDateString()}</td>
-                    <td>${v.nombre}</td>
-                    <td><span class="badge ${est === 'Completada' ? 'badge-completada' : 'badge-pendiente'}">${est}</span></td>
+                    <td><strong>${v.nombre}</strong></td>
+                    <td><span style="font-size:0.6rem; padding:2px 5px; border:1px solid #ddd;">${estPago}</span></td>
                     <td><strong>$${parseFloat(v.monto).toFixed(2)}</strong></td>
-                    <td><button style="font-size:0.6rem; padding:5px 8px; cursor:pointer;" onclick='verFactura(${JSON.stringify(v)})'>VER</button></td>
+                    <td>
+                        <button id="log-${idUnico}" class="btn-status status-${currentLogistics}" onclick="toggleStatus('${idUnico}')">
+                            ${currentLogistics}
+                        </button>
+                    </td>
+                    <td><button class="btn-ver" onclick='verFactura(${JSON.stringify(v)})'>DOC</button></td>
                 </tr>`;
             });
-
-            renderCharts(data);
         } catch (e) { console.error(e); }
     }
 
-    function renderCharts(data) {
-        const regCount = {};
-        data.forEach(v => regCount[v.estado] = (regCount[v.estado] || 0) + 1);
-        if(chart1) chart1.destroy();
-        chart1 = new Chart(document.getElementById('chartRegiones'), {
-            type: 'doughnut',
-            data: { 
-                labels: Object.keys(regCount), 
-                datasets: [{ data: Object.values(regCount), backgroundColor: ['#1a1a1a','#4a4a4a','#7a7a7a','#aaaaaa','#d1d1d1'], borderWidth: 0 }] 
-            },
-            options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } } }
-        });
+    function toggleStatus(id) {
+        const btn = document.getElementById(`log-${id}`);
+        const states = ['procesado', 'enviado', 'entregado'];
+        let current = logisticStatusMap[id];
+        let nextIndex = (states.indexOf(current) + 1) % states.length;
+        let nextState = states[nextIndex];
+
+        // Actualizar mapa y botón
+        logisticStatusMap[id] = nextState;
+        btn.innerText = nextState;
+        btn.className = `btn-status status-${nextState}`;
     }
 
     function verFactura(d) {
-        document.getElementById('f-fecha').innerText = new Date(d.fecha || new Date()).toLocaleString();
-        document.getElementById('f-nombre').innerText = d.nombre;
-        document.getElementById('f-cedula').innerText = d.cedula || 'N/A';
-        document.getElementById('f-telefono').innerText = d.telefono || 'N/A';
-        document.getElementById('f-estado').innerText = d.estado;
-        document.getElementById('f-agencia').innerText = d.agencia;
-        document.getElementById('f-producto').innerText = d.producto;
-        document.getElementById('f-estatus').innerText = d.estadoVenta || 'Completada';
-        document.getElementById('f-monto').innerText = parseFloat(d.monto).toFixed(2);
+        const content = `
+            <div class="inv-detail"><span class="inv-label">Fecha:</span><span>${new Date(d.fecha).toLocaleString()}</span></div>
+            <div class="inv-detail"><span class="inv-label">Cliente:</span><span>${d.nombre}</span></div>
+            <div class="inv-detail"><span class="inv-label">Cédula:</span><span>${d.cedula || 'N/A'}</span></div>
+            <div class="inv-detail"><span class="inv-label">Producto:</span><span>${d.producto}</span></div>
+            <div style="font-size: 2rem; font-weight: 900; text-align: right; border-top: 2px solid var(--dark-gray); padding-top: 15px; margin-top: 20px;">
+                $${parseFloat(d.monto).toFixed(2)}
+            </div>
+        `;
+        document.getElementById('invoice-content').innerHTML = content;
         document.getElementById('modalFactura').style.display = 'flex';
     }
 
@@ -306,15 +290,8 @@
         const btn = document.getElementById('btnGuardar');
         btn.innerText = "PROCESANDO...";
         const formData = new FormData(e.target);
-        
-        // Mock data para ver factura al instante
-        const currentData = Object.fromEntries(formData.entries());
-        currentData.fecha = new Date();
-
         await fetch(scriptURL, { method: 'POST', body: formData });
-        
         btn.innerText = "PROCESAR Y GENERAR FACTURA";
-        verFactura(currentData);
         e.target.reset();
         cargarTodo();
     });
