@@ -196,6 +196,17 @@
             .user-email{display:none}
         }
 
+        /* ─── CHARTS ─── */
+        .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+        .chart-card{background:#fff;border-radius:10px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04);padding:18px 20px}
+        .chart-title{font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+        .chart-wrap{position:relative;height:200px}
+        @media(max-width:768px){.charts-grid{grid-template-columns:1fr}}
+
+        /* ─── WA BUTTON ─── */
+        .bi.wa{color:#2a6049;border-color:#c5ddd6}
+        .bi.wa:hover{border-color:#2a6049;background:#e4ede8;color:#2a6049}
+
         /* ─── FOOTER ─── */
         .app-footer{text-align:center;padding:20px;font-size:.72rem;color:#aaa;border-top:1px solid var(--border);margin-top:8px}
         .app-footer a{color:#aaa;text-decoration:none}
@@ -259,6 +270,18 @@
                 <div class="sc-lbl">Sin Entregar</div>
                 <div class="sc-val" id="stPend">—</div>
                 <div class="sc-sub">procesadas + enviadas</div>
+            </div>
+        </div>
+
+        <!-- ── GRÁFICAS ── -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">Ventas por mes (últimos 6 meses)</div>
+                <div class="chart-wrap"><canvas id="chartMeses"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Distribución de productos</div>
+                <div class="chart-wrap"><canvas id="chartProductos"></canvas></div>
             </div>
         </div>
 
@@ -491,6 +514,9 @@
 <div id="toast" class="toast"></div>
 <div id="printArea" style="display:none"></div>
 
+<!-- ══════════════ CHART.JS ══════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
 <!-- ══════════════ FIREBASE ══════════════ -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -541,6 +567,7 @@ auth.onAuthStateChanged(user=>{
         qs('#loginPage').style.display='none';
         qs('#dashboardPage').style.display='block';
         qs('#uEmail').textContent=user.email;
+        initCharts();
         startListener();
     } else {
         qs('#loginPage').style.display='flex';
@@ -575,6 +602,7 @@ function startListener(){
         .onSnapshot(snap=>{
             ventas=snap.docs.map(d=>({id:d.id,...d.data()}));
             updateStats(ventas);
+            updateCharts(ventas);
             renderTabla(applyFilters());
         }, err=>{ console.error(err); toast('Error al cargar datos.','error'); });
 }
@@ -806,6 +834,7 @@ function renderTabla(data){
             <td style="font-weight:700;white-space:nowrap">$${parseFloat(v.monto).toFixed(2)}</td>
             <td><button class="badge badge-${log}" onclick="cambiarStatus('${v.id}','${log}',this)">${cap(log)}</button></td>
             <td><div class="abts">
+                <button class="bi wa" onclick="window.open('https://wa.me/${waNum(v.telefono)}','_blank')" title="WhatsApp">WA</button>
                 <button class="bi" onclick="verRecibo('${v.id}')">Recibo</button>
                 <button class="bi" onclick="editarV('${v.id}')">Editar</button>
                 <button class="bi del" onclick="confirmarDel('${v.id}','${esc(v.nombre)}')">Eliminar</button>
@@ -1048,6 +1077,106 @@ function qs(s){ return document.querySelector(s); }
 function qsa(s){ return document.querySelectorAll(s); }
 function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+// ══════════════════════════════════════════════
+//  WHATSAPP
+// ══════════════════════════════════════════════
+function waNum(tel){
+    let n=(tel||'').replace(/\D/g,'');
+    if(n.startsWith('0')) n='58'+n.slice(1);
+    return n;
+}
+
+// ══════════════════════════════════════════════
+//  CHARTS
+// ══════════════════════════════════════════════
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#777';
+
+let chartMeses=null, chartProductos=null;
+
+function initCharts(){
+    const ctxM=document.getElementById('chartMeses').getContext('2d');
+    const ctxP=document.getElementById('chartProductos').getContext('2d');
+
+    chartMeses = new Chart(ctxM,{
+        type:'bar',
+        data:{ labels:[], datasets:[{
+            label:'Ventas', data:[],
+            backgroundColor:'#111', borderRadius:4, borderSkipped:false,
+        },{
+            label:'Monto ($)', data:[],
+            backgroundColor:'#999', borderRadius:4, borderSkipped:false,
+        }]},
+        options:{
+            responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, padding:12, font:{size:10} } } },
+            scales:{
+                x:{ grid:{display:false}, ticks:{font:{size:10}} },
+                y:{ grid:{color:'#f0f0f0'}, ticks:{font:{size:10}}, beginAtZero:true }
+            }
+        }
+    });
+
+    chartProductos = new Chart(ctxP,{
+        type:'doughnut',
+        data:{ labels:[], datasets:[{ data:[], backgroundColor:['#111','#444','#777','#999','#bbb','#ddd'], borderWidth:2, borderColor:'#fff' }]},
+        options:{
+            responsive:true, maintainAspectRatio:false,
+            plugins:{
+                legend:{ position:'bottom', labels:{ boxWidth:10, padding:10, font:{size:10} } },
+                tooltip:{ callbacks:{ label: ctx=>' '+ctx.label+': '+ctx.raw+' ventas ('+Math.round(ctx.parsed*100/(ctx.dataset.data.reduce((a,b)=>a+b,0)||1))+'%)' } }
+            },
+            cutout:'60%'
+        }
+    });
+}
+
+function updateCharts(data){
+    if(!chartMeses||!chartProductos) return;
+
+    // ── Ventas por mes (últimos 6 meses) ──
+    const now=new Date();
+    const mesesLabels=[], ventasCounts=[], montosArr=[];
+    for(let i=5;i>=0;i--){
+        const d=new Date(now.getFullYear(), now.getMonth()-i, 1);
+        mesesLabels.push(MESES[d.getMonth()]+' '+d.getFullYear().toString().slice(2));
+        const mes=data.filter(v=>{
+            const fd=getDate(v);
+            return fd.getMonth()===d.getMonth()&&fd.getFullYear()===d.getFullYear();
+        });
+        ventasCounts.push(mes.length);
+        montosArr.push(parseFloat(mes.reduce((s,v)=>s+parseFloat(v.monto||0),0).toFixed(2)));
+    }
+    chartMeses.data.labels=mesesLabels;
+    chartMeses.data.datasets[0].data=ventasCounts;
+    chartMeses.data.datasets[1].data=montosArr;
+    chartMeses.update();
+
+    // ── Distribución de productos ──
+    const counts={};
+    data.forEach(v=>{
+        getItems(v).forEach(it=>{
+            const lbl=it.label||'Desconocido';
+            counts[lbl]=(counts[lbl]||0)+1;
+        });
+    });
+    // Agrupar por tipo base (sin talla/diseño) para la gráfica
+    const grouped={};
+    data.forEach(v=>{
+        getItems(v).forEach(it=>{
+            let key;
+            if(it.categoria==='carta')  key='Carta';
+            else if(it.categoria==='poster') key='Poster';
+            else key=CATALOGO[it.tipoPrenda]?.label||it.tipoPrenda||'Prenda';
+            grouped[key]=(grouped[key]||0)+1;
+        });
+    });
+    const entries=Object.entries(grouped).sort((a,b)=>b[1]-a[1]);
+    chartProductos.data.labels=entries.map(e=>e[0]);
+    chartProductos.data.datasets[0].data=entries.map(e=>e[1]);
+    chartProductos.update();
+}
 
 let toastT;
 function toast(msg,type=''){
