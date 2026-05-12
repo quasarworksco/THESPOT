@@ -281,6 +281,7 @@
                         <div class="block-label">Categoría</div>
                         <div class="chips" id="reg-cats">
                             <button type="button" class="chip" data-cat="carta">Carta <span class="pr">$5.00</span></button>
+                            <button type="button" class="chip" data-cat="poster">Poster <span class="pr">$1.80</span></button>
                             <button type="button" class="chip" data-cat="prenda">Prenda (Franela / Chaqueta)</button>
                         </div>
                     </div>
@@ -412,6 +413,7 @@
                     <div class="edit-section-title">Agregar Producto</div>
                     <div class="chips" id="esel-cats">
                         <button type="button" class="chip" data-cat="carta">Carta <span class="pr">$5.00</span></button>
+                        <button type="button" class="chip" data-cat="poster">Poster <span class="pr">$1.80</span></button>
                         <button type="button" class="chip" data-cat="prenda">Prenda</button>
                     </div>
                     <div id="esel-tipo-blk" class="hidden" style="margin-top:10px">
@@ -514,7 +516,8 @@ const db   = firebase.firestore();
 //  CATÁLOGO
 // ══════════════════════════════════════════════
 const CATALOGO = {
-    carta:        { label:'Carta',               precio:5 },
+    carta:        { label:'Carta',               precio:5    },
+    poster:       { label:'Poster',              precio:1.80 },
     algodon:      { label:'Franela Algodón',      tallas:{S:8,M:8,L:8,XL:10,XXL:12},  disenos:[{m:'30×40 cm',p:7},{m:'28×22 cm',p:4},{m:'10×10 cm',p:1},{m:'5×5 cm',p:.5}] },
     microdurazno: { label:'Franela Microdurazno', tallas:{S:7,M:7,L:7,XL:9,XXL:11},   disenos:[{m:'28×22 cm',p:3},{m:'30×40 cm',p:6}] },
     chaqueta:     { label:'Chaqueta',             tallas:{S:16,M:16,L:16},              disenos:[{m:'30×40 cm',p:7},{m:'28×22 cm',p:4},{m:'10×10 cm',p:1},{m:'5×5 cm',p:.5}] },
@@ -581,7 +584,8 @@ function getDate(v){ return v.fecha?.toDate ? v.fecha.toDate() : new Date(v.fech
 function getItems(v){
     if(v.items && v.items.length) return v.items;
     // compatibilidad con formato antiguo
-    if(v.categoria==='carta') return [{categoria:'carta',label:'Carta',subtotal:5,precioPrenda:5,tipoPrenda:null,talla:null,tieneDiseno:false,medidaDiseno:null,precioDiseno:0}];
+    if(v.categoria==='carta')  return [{categoria:'carta', label:'Carta', subtotal:CATALOGO.carta.precio, precioPrenda:CATALOGO.carta.precio, tipoPrenda:null,talla:null,tieneDiseno:false,medidaDiseno:null,precioDiseno:0}];
+    if(v.categoria==='poster') return [{categoria:'poster',label:'Poster',subtotal:CATALOGO.poster.precio,precioPrenda:CATALOGO.poster.precio,tipoPrenda:null,talla:null,tieneDiseno:false,medidaDiseno:null,precioDiseno:0}];
     return [{
         categoria:'prenda', tipoPrenda:v.tipoPrenda, talla:v.talla,
         precioPrenda:v.precioPrenda||0, tieneDiseno:v.tieneDiseno,
@@ -628,7 +632,8 @@ function makeSelector(prefix){
 
     function getItem(){
         if(!s.cat) return null;
-        if(s.cat==='carta') return {categoria:'carta',label:'Carta',subtotal:CATALOGO.carta.precio,precioPrenda:CATALOGO.carta.precio,tipoPrenda:null,talla:null,tieneDiseno:false,medidaDiseno:null,precioDiseno:0};
+        if(s.cat==='carta')  return {categoria:'carta', label:'Carta',  subtotal:CATALOGO.carta.precio,  precioPrenda:CATALOGO.carta.precio,  tipoPrenda:null,talla:null,tieneDiseno:false,medidaDiseno:null,precioDiseno:0};
+        if(s.cat==='poster') return {categoria:'poster',label:'Poster', subtotal:CATALOGO.poster.precio, precioPrenda:CATALOGO.poster.precio, tipoPrenda:null,talla:null,tieneDiseno:false,medidaDiseno:null,precioDiseno:0};
         if(!s.tipo||!s.talla) return null;
         if(s.diseno&&!s.medida) return null;
         const cat=CATALOGO[s.tipo];
@@ -651,7 +656,7 @@ function makeSelector(prefix){
             s.tipo=null;s.talla=null;s.diseno=false;s.medida=null;
             qsa('#'+id('tipos')+' .chip').forEach(x=>x.classList.remove('on'));
             s.cat==='prenda'?show(id('tipo-blk')):hide(id('tipo-blk'));
-            [id('talla-blk'),id('diseno-blk')].forEach(hide);
+            [id('talla-blk'),id('diseno-blk'),id('medidas-blk')].forEach(hide);
             updateBtn();
         });
     });
