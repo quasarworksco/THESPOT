@@ -186,14 +186,78 @@
 
         /* ─── RESPONSIVE ─── */
         @media(max-width:768px){
-            .app-main{padding:12px}
-            .stats{grid-template-columns:repeat(2,1fr)}
+            /* Layout */
+            .app-main{padding:10px}
+            .app-header{padding:0 12px;height:54px}
+            .app-header h1{font-size:1.2rem}
+            .user-email{display:none}
+            .btn-logout{padding:5px 10px;font-size:.76rem}
+
+            /* Stats */
+            .stats{grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+            .sc{padding:13px 14px}
+            .sc-val{font-size:1.5rem}
+
+            /* Charts */
+            .charts-grid{grid-template-columns:1fr;gap:12px;margin-bottom:14px}
+            .chart-wrap{height:180px}
+
+            /* Sections */
+            .section{border-radius:8px;margin-bottom:12px}
+            .sh{padding:11px 14px;flex-direction:column;align-items:flex-start}
+            .sh h2{font-size:.86rem}
+            .sb{padding:14px}
+
+            /* Form grids */
             .g3,.g2{grid-template-columns:1fr}
             .adic-grid{grid-template-columns:1fr}
-            .search,.fi{width:100%}
-            .filter-bar{flex-direction:column;align-items:stretch}
-            .app-header{padding:0 13px}
-            .user-email{display:none}
+
+            /* Chips */
+            .chip{padding:6px 12px;font-size:.8rem}
+
+            /* Filter bar */
+            .filter-bar{flex-direction:column;align-items:stretch;gap:8px}
+            .search,.fi{width:100%;font-size:.85rem}
+            .btn-clear,.btn-export{width:100%;padding:9px;text-align:center}
+
+            /* Table */
+            table{font-size:.78rem}
+            thead th{padding:8px 10px;font-size:.64rem}
+            td{padding:9px 10px}
+
+            /* Action buttons — stack en móvil */
+            .abts{flex-direction:row;flex-wrap:wrap;gap:4px}
+            .bi{padding:4px 7px;font-size:.68rem}
+
+            /* Modals */
+            .mc{border-radius:10px;max-height:96vh}
+            .mc.wide{max-width:100%}
+            .mh{padding:14px 16px 0}
+            .mb{padding:12px 16px}
+            .mf{padding:0 16px 14px;gap:8px}
+
+            /* Summary */
+            .sum-box{padding:11px 13px}
+            .sum-total{font-size:.95rem}
+
+            /* Items */
+            .item-row{padding:8px 11px}
+            .item-label{font-size:.82rem}
+
+            /* Login */
+            .login-card{padding:32px 22px;border-radius:8px}
+            .login-logo h1{font-size:2rem}
+
+            /* Footer */
+            .app-footer{font-size:.68rem;padding:14px}
+        }
+
+        /* Pantallas muy pequeñas */
+        @media(max-width:380px){
+            .stats{grid-template-columns:1fr 1fr}
+            .sc-val{font-size:1.3rem}
+            .abts{gap:3px}
+            .bi{padding:3px 6px;font-size:.65rem}
         }
 
         /* ─── CHARTS ─── */
@@ -834,7 +898,7 @@ function renderTabla(data){
             <td style="font-weight:700;white-space:nowrap">$${parseFloat(v.monto).toFixed(2)}</td>
             <td><button class="badge badge-${log}" onclick="cambiarStatus('${v.id}','${log}',this)">${cap(log)}</button></td>
             <td><div class="abts">
-                <button class="bi wa" onclick="window.open('https://wa.me/${waNum(v.telefono)}','_blank')" title="WhatsApp">WA</button>
+                <button class="bi wa" onclick="window.open('https://wa.me/${waNum(v.telefono)}?text=${encodeURIComponent('Hola '+v.nombre+', te contactamos desde *The Spot* 🛍️ con respecto a tu pedido de '+descProd(v)+'. Por favor confirma si recibiste tu pedido o escríbenos para darte seguimiento. ¡Gracias!')}','_blank')" title="WhatsApp">WA</button>
                 <button class="bi" onclick="verRecibo('${v.id}')">Recibo</button>
                 <button class="bi" onclick="editarV('${v.id}')">Editar</button>
                 <button class="bi del" onclick="confirmarDel('${v.id}','${esc(v.nombre)}')">Eliminar</button>
