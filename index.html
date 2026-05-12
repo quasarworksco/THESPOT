@@ -196,6 +196,11 @@
             .user-email{display:none}
         }
 
+        /* ─── FOOTER ─── */
+        .app-footer{text-align:center;padding:20px;font-size:.72rem;color:#aaa;border-top:1px solid var(--border);margin-top:8px}
+        .app-footer a{color:#aaa;text-decoration:none}
+        .app-footer a:hover{color:#777}
+
         /* ─── PRINT ─── */
         @media print{
             body>*{display:none!important}
@@ -366,6 +371,10 @@
         </div>
 
     </main>
+
+    <footer class="app-footer">
+        Realizado por <strong>DGP GLOBAL GROUP</strong> · Ocala, Florida · <a href="mailto:dgpgroup.usa@gmail.com">dgpgroup.usa@gmail.com</a>
+    </footer>
 </div>
 
 <!-- ══════════ MODAL: EDITAR ══════════ -->
@@ -1002,7 +1011,7 @@ function verRecibo(id){
             <hr class="inv-hr">
             <div class="inv-sec-title">Estado Logístico</div>
             ${iRow('Estado',cap(v.logistica||'procesado'))}
-            <div class="inv-footer">Gracias por tu compra · The Spot</div>
+            <div class="inv-footer">Gracias por tu compra · The Spot<br>Desarrollado por <strong>DGP GLOBAL GROUP</strong> · Ocala, Florida · dgpgroup.usa@gmail.com</div>
         </div>`;
     abrir('mRecibo');
 }
